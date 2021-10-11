@@ -37,8 +37,16 @@
 				</template>
 			</c-button-group>
 			<div class="flex">
-				<c-button @click="snapshot" title="Take Snapshot" class="m-1 text-gray-500">
-					<span class="material-icons-rounded">photo_camera</span>
+				<c-button @click="snapshot" title="Save Image" class="m-1 text-gray-500">
+					<span class="material-icons-rounded">image</span>
+				</c-button>
+				<c-button
+					v-if="recordingSupported"
+					@click="stopRecording"
+					title="Save Recording"
+					class="m-1 text-gray-500"
+				>
+					<span class="material-icons-rounded">movie</span>
 				</c-button>
 				<c-button @click="reload" title="Reload" class="m-1 text-gray-500">
 					<span class="material-icons-rounded">replay</span>
@@ -48,7 +56,7 @@
 	</div>
 </template>
 
-<style lang="postcss" scoped>
+<style lang="postcss">
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
@@ -82,17 +90,48 @@ export default {
 	data() {
 		return {
 			paused: true,
+			recordingSupported: true,
+			mediaRecorder: null,
 			selectedFrame: 0,
 			currentFrame: 0,
 		};
 	},
+	computed: {
+		canvas() {
+			return this.animateWindow.document.querySelector('canvas');
+		},
+		framerate() {
+			return this.animateWindow.createjs.Ticker.framerate;
+		},
+		size() {
+			const scale = window.devicePixelRatio;
+			const height = this.canvas.height / scale;
+			const width = this.canvas.width / scale;
+			return `${width}x${height}`;
+		},
+	},
 	methods: {
 		snapshot() {
-			const canvas = this.animateWindow.document.querySelector('canvas');
-			const scale = window.devicePixelRatio;
-			const height = canvas.height / scale;
-			const width = canvas.width / scale;
-			saveAs(canvas.toDataURL('image/jpg'), `${width}x${height}.jpg`);
+			saveAs(this.canvas.toDataURL('image/jpg'), `${this.size}.jpg`);
+		},
+		startRecording() {
+			try {
+				const stream = this.canvas.captureStream(this.framerate);
+				this.mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+				const chunks = [];
+				this.mediaRecorder.ondataavailable = (e) => chunks.push(e.data);
+				this.mediaRecorder.onstop = async (e) => {
+					const blob = new Blob(chunks, { type: 'video/webm' });
+					saveAs(URL.createObjectURL(blob), `${this.size}.webm`);
+				};
+				this.mediaRecorder.start();
+			} catch (error) {
+				this.recordingSupported = false;
+				this.mediaRecorder = null;
+			}
+		},
+		stopRecording() {
+			if (this.mediaRecorder) this.mediaRecorder.stop();
 		},
 		seek(frame) {
 			this.stop();
@@ -120,6 +159,7 @@ export default {
 		};
 
 		requestAnimationFrame(updateStageProperties);
+		if (this.mediaRecorder === null) this.startRecording();
 		this.animateWindow.addEventListener('beforeunload', () => {
 			this.$destroy();
 		});

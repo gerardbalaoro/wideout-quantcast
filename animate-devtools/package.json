@@ -24,6 +24,7 @@
     "@tailwindcss/forms": "^0.3.3",
     "@types/chrome": "^0.0.158",
     "@types/createjs": "^0.0.29",
+    "@types/dom-mediacapture-record": "^1.0.10",
     "autoprefixer": "^10.3.2",
     "babel-loader": "^8.2.2",
     "copy-webpack-plugin": "^9.0.1",

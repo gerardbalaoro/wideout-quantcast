@@ -44,7 +44,7 @@ export default {
 					sitesList = sitesList.filter(s => s !== host)
 				}
 				chrome.storage.sync.set({ sitesList }, () => {
-					chrome.tabs.reload(this.tab);
+					chrome.tabs.reload(this.tab, { bypassCache: true });
 					this.enabled = !this.enabled;
 				});
 			});
