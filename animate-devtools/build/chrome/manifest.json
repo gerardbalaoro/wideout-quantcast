@@ -1,0 +1,29 @@
+{
+	"manifest_version": 2,
+	"name": "Animate Developer Tools",
+	"version": "1.0.0",
+	"description": "Developer Tools for Adobe Animate HTML5 Canvas Projects",
+	"icons": {
+		"16": "assets/icons/icon-16.png",
+		"48": "assets/icons/icon-48.png",
+		"128": "assets/icons/icon-128.png"
+	},
+	"browser_action": {
+		"default_icon": "assets/icons/icon-gray-128.png",
+		"default_popup": "popup/index.html",
+		"default_title": "Animate DevTools"
+	},
+	"content_scripts": [
+		{
+			"js": ["content/index.js"],
+			"matches": ["<all_urls>"],
+			"all_frames": false
+		}
+	],
+	"background": {
+		"scripts": ["background/index.js"],
+		"persistent": false
+	},
+	"web_accessible_resources": ["assets/*", "content/hook/*"],
+	"permissions": ["*://*/*", "storage", "tabs"]
+}

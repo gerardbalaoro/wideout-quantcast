@@ -1,0 +1,20 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"target": "ES5",
+		"module": "commonjs",
+		"lib": ["DOM", "DOM.Iterable", "ESNext"],
+		"sourceMap": true,
+		"declaration": false,
+		"moduleResolution": "node",
+		"forceConsistentCasingInFileNames": true,
+		"allowSyntheticDefaultImports": true,
+		"noStrictGenericChecks": true,
+		"noImplicitAny": false,
+		"strictNullChecks": false,
+		"esModuleInterop": true,
+		"typeRoots": ["node_modules/@types"]
+	},
+	"include": ["./src/**/*.ts"],
+	"files": ["./vue-shims.d.ts"]
+}

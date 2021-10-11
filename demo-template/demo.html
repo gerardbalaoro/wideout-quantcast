@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<script type="text/javascript">
+			// Name of default ad to load
+			var AD_INIT = '300x600';
+			// List of ads, set all properties
+			var AD_LIST = [
+				{ name: '120x600', url: '120x600/120x600.html', height: 600, width: 120 },
+				{ name: '160x600', url: '160x600/160x600.html', height: 600, width: 160 },
+				{ name: '300x250', url: '300x250/300x250.html', height: 250, width: 300 },
+				{ name: '300x600', url: '300x600/300x600.html', height: 600, width: 300 },
+				{ name: '300x50', url: '300x50/300x50.html', height: 50, width: 300 },
+				{ name: '320x50', url: '320x50/320x50.html', height: 50, width: 320 },
+				{ name: '468x60', url: '468x60/468x60.html', height: 60, width: 468 },
+				{ name: '728x90', url: '728x90/728x90.html', height: 90, width: 728 },
+				{ name: '970x250', url: '970x250/970x250.html', height: 250, width: 970 }
+			];
+
+			function t(s, o) {
+				var r = new RegExp(
+					Object.keys(o)
+						.map(function (k) {
+							return '\\$' + k;
+						})
+						.join('|'),
+					'gi'
+				);
+				return s.replace(r, function (m) {
+					return o[m.slice(1)];
+				});
+			}
+
+			function preview(w, h, url) {
+				var html =
+					'<iframe frameborder="0" scrolling="no" align="middle" height="$height" width="$width" src="$src"></iframe>';
+				document.getElementById('ads').innerHTML = t(html, { width: w, height: h, src: url });
+			}
+
+			function handleMouseEvents(e) {
+				var iframe = document.querySelector('iframe');
+				try {
+					if ((e.type === 'mouseover' && e.target !== iframe) || e.type === 'mouseleave') {
+						if (iframe.contentWindow && iframe.contentWindow.stage) {
+							iframe.contentWindow.stage.mouseInBounds = false;
+						}
+					}
+				} catch (error) {
+					console.debug(error);
+				}
+			}
+
+			window.addEventListener('load', function () {
+				document.addEventListener('mouseover', handleMouseEvents);
+				document.addEventListener('mouseleave', handleMouseEvents);
+
+				var html = '<li><a onclick="preview($width, $height, \'$url\')">$name</a></li>';
+				for (var i = 0; i < AD_LIST.length; i++) {
+					document.getElementById('ad-list').insertAdjacentHTML('beforeend', t(html, AD_LIST[i]));
+					if (AD_LIST[i].name === AD_INIT) {
+						document.querySelector('#ad-list > li:last-of-type > a').click();
+						AD_INIT = null;
+					}
+				}
+				if (AD_INIT !== null) document.querySelector('#ad-list > li > a').click();
+			});
+
+			window.addEventListener('unload', function () {
+				document.removeEventListener('mouseover', handleMouseEvents);
+				document.removeEventListener('mouseleave', handleMouseEvents);
+			});
+		</script>
+		<style>
+			body {
+				margin: 10;
+				padding: 10;
+				padding-top: 16px;
+				background-color: #f3f3f3;
+			}
+			.header {
+				position: absolute;
+				top: 0px;
+				width: 100%;
+				margin: 0;
+				background: #181d21;
+				border: none;
+				background-image: url('../../../0_DemoPage/QuantcastLogo.svg') no-repeat;
+				height: 60px;
+				left: 0px;
+				margin-left: 0px;
+			}
+			iframe {
+				border: hidden;
+				margin-top: 100px;
+			}
+			#nav {
+				z-index: 15;
+				position: absolute;
+				top: 103px;
+				left: 20px;
+				width: 150px;
+				height: 360px;
+				background-color: none;
+				cursor: pointer;
+			}
+			li {
+				text-justify: distribute;
+				font-family: 'open sans';
+				margin-bottom: 1.5em;
+			}
+			/* unvisited link */
+			a:link {
+				color: #ffffff;
+			}
+
+			/* visited link */
+			a:visited {
+				color: #ffffff;
+			}
+
+			/* mouse over link */
+			a:hover {
+				color: #ff0004;
+			}
+
+			/* selected link */
+			a:active {
+				color: #000000;
+			}
+		</style>
+		<title>Client Review</title>
+	</head>
+	<div class="header">
+		<img
+			src="http://i39t.com/production/share/Client_Demo/0_DemoPage/QuantcastLogo.svg"
+			width="250"
+			height="55"
+			top="10"
+		/>
+	</div>
+	<body>
+		<div id="ads" align="center"></div>
+		<div id="nav">
+			<ul id="ad-list" style="list-style-type: none"></ul>
+		</div>
+	</body>
+</html>
