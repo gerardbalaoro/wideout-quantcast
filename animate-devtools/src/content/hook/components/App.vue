@@ -111,7 +111,6 @@ export default {
 		},
 	},
 	mounted() {
-		// window.top.$an0 = this;
 		const updateStageProperties = () => {
 			if (this.animateWindow.stage !== undefined) {
 				this.paused = this.animateWindow.stage.tickEnabled !== true;

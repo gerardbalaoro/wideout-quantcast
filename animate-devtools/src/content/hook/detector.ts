@@ -1,4 +1,4 @@
-interface AnimateWindow extends Window {
+export interface AnimateWindow extends Window {
 	createjs?: {
 		Ticker: typeof createjs.Ticker & createjs.Ticker;
 	};
@@ -9,7 +9,7 @@ interface AnimateWindow extends Window {
 type DetectorEvent = { window: AnimateWindow; target: HTMLElement; type: string };
 type DetectorListener = (e: DetectorEvent) => void;
 
-const Detector = (window: AnimateWindow, callback: DetectorListener) => {
+export const Detector = (window: AnimateWindow, callback: DetectorListener) => {
 	const hasAnimate = (window: AnimateWindow) => {
 		try {
 			return window.AdobeAn !== undefined;
@@ -22,7 +22,6 @@ const Detector = (window: AnimateWindow, callback: DetectorListener) => {
 		if (iframe.contentDocument?.readyState === 'complete') {
 			if (hasAnimate(iframe.contentWindow)) {
 				callback({ window: iframe.contentWindow, target: iframe, type: 'load' });
-				return;
 			}
 		}
 
@@ -56,5 +55,3 @@ const Detector = (window: AnimateWindow, callback: DetectorListener) => {
 			watchMutations(window, callback);
 		}
 };
-
-export default Detector;
