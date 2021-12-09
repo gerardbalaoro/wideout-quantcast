@@ -3,4 +3,4 @@
 A collection of scripts, apps, and tools I developed
 while working for Quantcast.
 
-### [Read the Wiki →](./wiki)
+### [Read the Wiki →](../../wiki)
