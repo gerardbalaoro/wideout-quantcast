@@ -9,7 +9,7 @@
 		"128": "assets/icons/icon-128.png"
 	},
 	"browser_action": {
-		"default_icon": "assets/icons/icon-gray-128.png",
+		"default_icon": "assets/icons/icon-128.png",
 		"default_popup": "popup/index.html",
 		"default_title": "Animate DevTools"
 	},
